@@ -9,12 +9,11 @@ import csv
 import reddit_helpers
 
 __author__ = "Aamir Hasan"
-__version__ = "1.0"
+__version__ = "1.0.1"
 __email__ = "hasanaamir215@gmail.com"
 
 bot_name = 'GoT_Crawler'
-path = "../data/"
-data_filename = "got_crawler_data.csv"
+datafile_path = "../data/got_crawler_data.csv"
 
 
 def crawl(reddit, subreddit):
@@ -25,10 +24,13 @@ def crawl(reddit, subreddit):
     :param subreddit: The subreddit to be crawled
     """
 
-    data_file = open(path + data_filename, 'a+')
+    data_file = reddit_helpers.open_file(datafile_path, 'a+')
+    if data_file is False:
+        return
+
     csv_writer = csv.writer(data_file)
 
-    for comment in reddit.subreddit(subreddit).comments(limit=9999999):
+    for comment in reddit.subreddit(subreddit).comments(limit=1000):
         csv_writer.writerow([comment.id, comment.body, comment.score, comment.subreddit, comment.created])
 
     data_file.close()
@@ -44,6 +46,7 @@ def gather_data():
     subreddits = ['gameofthrones', 'asoiaf', 'freefolk']
 
     for subreddit in subreddits:
+        print("Reading from ", subreddit, "...")
         crawl(reddit, subreddit)
 
 

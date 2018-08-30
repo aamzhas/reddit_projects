@@ -4,10 +4,12 @@
 File contains helper funtions for all Reddit Projects
 """
 
+import os
+
 import praw
 
 __author__ = "Aamir Hasan"
-__version__ = "1.0"
+__version__ = "1.0.1"
 __email__ = "hasanaamir215@gmail.com"
 
 
@@ -31,6 +33,13 @@ def authenticate(bot_name):
     return reddit
 
 
+def open_file(path, permission):
+    if os.path.exists(path):
+        return open(path, permission)
+
+    print("Path does not exist!")
+    return False
+
 def read_from_file(path):
     """
     Reading from a file
@@ -39,9 +48,13 @@ def read_from_file(path):
     :return: Contents of the file
     """
 
-    file_reader = open(path, "r")
-    lines = file_reader.read().splitlines()
-    file_reader.close()
+    file = open_file(path, "r")
+
+    if file is False:
+        return ""
+
+    lines = file.read().splitlines()
+    file.close()
 
     return lines
 
@@ -54,9 +67,12 @@ def write_to_file(path, lines):
     :param lines: lines to be written
     """
 
-    file_writer = open(path, "a+")
+    file = open_file(path, "a+")
+
+    if file is False:
+        return
 
     for line in lines:
-        file_writer.write(line + "\n")
+        file.write(line + "\n")
 
-    file_writer.close()
+    file.close()
