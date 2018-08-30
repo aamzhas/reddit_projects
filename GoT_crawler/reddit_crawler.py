@@ -9,7 +9,7 @@ import csv
 import reddit_helpers
 
 __author__ = "Aamir Hasan"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 __email__ = "hasanaamir215@gmail.com"
 
 bot_name = 'GoT_Crawler'
@@ -31,7 +31,8 @@ def crawl(reddit, subreddit):
     csv_writer = csv.writer(data_file)
 
     for comment in reddit.subreddit(subreddit).comments(limit=1000):
-        csv_writer.writerow([comment.id, comment.body, comment.score, comment.subreddit, comment.created])
+        csv_writer.writerow(
+            [comment.id, comment.body, comment.score, comment.subreddit, comment.author, comment.created_utc])
 
     data_file.close()
 
@@ -46,7 +47,7 @@ def gather_data():
     subreddits = ['gameofthrones', 'asoiaf', 'freefolk']
 
     for subreddit in subreddits:
-        print("Reading from ", subreddit, "...")
+        print("Reading from r/", subreddit, "...", sep="")
         crawl(reddit, subreddit)
 
 
